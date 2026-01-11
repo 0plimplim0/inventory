@@ -66,7 +66,33 @@ def addMenu():
     }
     
     inventario.append(element)
-    core.saveItem(inventario)    
+    core.saveInventory(inventario)    
+
+def deleteMenu():
+    tools.clearConsole()
+    print("Inventario electronica v1.0.0\n")
+    print("=======================================")
+    print("=  E L I M I N A R   E L E M E N T O  =")
+    print("=======================================\n")
+    id = input("ID: ")
+    inventario = core.getInventory()
+    newInventario = core.deleteItem(inventario, id)
+    if (newInventario == False):
+        return
+    core.saveInventory(newInventario)
+
+def editMenu():
+    tools.clearConsole()
+    print("Inventario electronica v1.0.0\n")
+    print("===================================")
+    print("=  E D I T A R   E L E M E N T O  =")
+    print("===================================\n")
+    id = input("ID: ")
+    inventario = core.getInventory()
+    newInventario = core.updateItem(inventario, id)
+    if (newInventario == False):
+        return
+    core.saveInventory(newInventario)
 
 running = True
 while running:
@@ -82,9 +108,11 @@ while running:
             addMenu()
             continue
         case "3":
-            pass
+            deleteMenu()
+            continue
         case "4":
-            pass
+            editMenu()
+            continue
         case "5":
             print("Saliendo...")
             running = False

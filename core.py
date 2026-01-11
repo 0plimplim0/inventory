@@ -11,21 +11,23 @@ def getInventory():
         time.sleep(1)
         return False
     
-def saveItem(item):
+def saveInventory(inventario):
     try:
         with open("./data/inventario.json", "w") as json_file:
-            json.dump(item, json_file, indent=4)
-            print("Elemento agregado correctamente.")
+            json.dump(inventario, json_file, indent=4)
+            print("Inventario actualizado correctamente.")
             time.sleep(1)
     except:
-        print("Ha ocurrido un error al agregar el item.")
+        print("Ha ocurrido un error al guardar.")
         time.sleep(1)
         return
 
 # Mas adelante cambiar a formateo con f-strings
 # Aviso: El tope de items es de 999.   
 def generateId(inventario):
-    num = len(inventario) + 1
+    index = len(inventario) - 1
+    lastItem = inventario[index]
+    num = int(lastItem["id"]) + 1
     length = len(str(num))
     match length:
         case 1:
@@ -62,8 +64,32 @@ def searchId(inventario, id):
         if (item["id"] == id):
             lista.append(item)
     if (len(lista) == 0):
-        print("No hay ningún item con ese id asignado.\n")
+        print("No hay ningún item con ese ID asignado.\n")
         return
     else:
         for item in lista:
             showItem(item)
+
+def deleteItem(inventario, id):
+    for item in inventario:
+        if (item["id"] == id):
+            inventario.remove(item)
+            return inventario
+    print("No existe ningún item con ese ID asignado.")
+    time.sleep(1)
+    return False
+
+def updateItem(inventario, id):
+    for item in inventario:
+        if (item["id"] == id):
+            try:
+                newCantidad = int(input("Nueva cantidad: "))
+                item["cantidad"] = newCantidad
+                return inventario
+            except ValueError:
+                print("Cantidad inválida.")
+                time.sleep(1)
+                return False
+    print("No existe ningún item con ese ID asignado.")
+    time.sleep(1)
+    return False

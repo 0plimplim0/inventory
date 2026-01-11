@@ -1,4 +1,4 @@
-# INVENTARIO v1.0
+# INVENTARIO v1.1
 
 ## Estado del proyecto
 En desarrollo activo

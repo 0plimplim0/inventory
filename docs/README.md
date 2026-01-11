@@ -36,6 +36,7 @@ tipo | valor | cantidad
 - Filtrado por categoria.
 - Implementacion de IDs para elementos.
 - Busqueda de elementos por ID.
+- Manipulación basica de items (CRUD).
 
 ### v1.2
 - Cambio de *json* a *sqlite*.

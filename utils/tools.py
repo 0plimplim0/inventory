@@ -12,9 +12,10 @@ def txtToJson(txtFileName, jsonFileName):
     for item in items:
         item_content = item.split(" | ")
         dic = {
-            "tipo": item_content[0],
-            "valor": item_content[1],
-            "cantidad": item_content[2]
+            "id": item_content[0],
+            "tipo": item_content[1],
+            "valor": item_content[2],
+            "cantidad": item_content[3]
         }
         lista.append(dic)
     

@@ -1,46 +1,53 @@
 from utils import tools
+import core
 import time
-import json
 
-def show_items():
+def showMenu():
     tools.clearConsole()
     print("Inventario electronica v1.0.0\n")
     print("===========================")
     print("=   I N V E N T A R I O   =")
     print("===========================\n")
 
-    with open("./data/inventario.json", "r") as json_file:
-        content = json.load(json_file)
+    inventario = core.getInventory()
+    if (inventario == False):
+        return
     
-    for item in content:
-        print(f"Tipo: {item["tipo"]}\nValor: {item["valor"]}\nCantidad: {item["cantidad"]}\n")
+    for item in inventario:
+        core.showItem(item)
 
     input("Presiona ENTER para volver.")
 
-
-def add_item():
+def addMenu():
     tools.clearConsole()
     print("Inventario electronica v1.0.0\n")
     print("=====================================")
     print("=  A G R E G A R   E L E M E N T O  =")
     print("=====================================\n")
+
+    inventario = core.getInventory()
+    if (inventario == False):
+        return
+    id = core.generateId(inventario)
+
     print("Ingrese los datos:\n")
     tipo = input("Tipo: ")
     valor = input("Valor: ")
-    cantidad = int(input("Cantidad: "))
+    try:
+        cantidad = int(input("Cantidad: "))
+    except ValueError:
+        print("Por favor introduce una cantidad válida.")
+        time.sleep(1)
+        return
     element = {
+        "id": id,
         "tipo": tipo,
         "valor": valor,
         "cantidad": cantidad
     }
-    with open("./data/inventario.json", "r") as json_file:
-        content = json.load(json_file)
-    content.append(element)
-    with open("./data/inventario.json", "w") as json_file:
-        json.dump(content, json_file, indent=4)
-    print("\nElemento agregado exitosamente.")
-    time.sleep(1)
     
+    inventario.append(element)
+    core.saveItem(inventario)    
 
 running = True
 while running:
@@ -50,10 +57,10 @@ while running:
     seleccion = input("Seleccion: ")
     match seleccion:
         case "1":
-            show_items()
+            showMenu()
             continue
         case "2":
-            add_item()
+            addMenu()
             continue
         case "3":
             print("Saliendo...")

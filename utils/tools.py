@@ -29,3 +29,10 @@ def clearConsole():
         os.system("cls")
     else:
         os.system("clear")
+
+def inventoryRoutine():
+    clearConsole()
+    print("Inventario electronica v1.0.0\n")
+    print("===========================")
+    print("=   I N V E N T A R I O   =")
+    print("===========================\n")

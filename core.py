@@ -44,3 +44,26 @@ def showItem(item):
     cantidad = item["cantidad"]
 
     print(f"ID: {id}\nTipo: {tipo}\nValor: {valor}\nCantidad: {cantidad}\n")
+
+def searchType(inventario, type):
+    lista = []
+    for item in inventario:
+        if (item["tipo"] == type):
+            lista.append(item)
+    if (len(lista) == 0):
+        print("No hay ningún item con ese tipo asignado.\n")
+        return
+    else:
+        for item in lista:
+            showItem(item)
+def searchId(inventario, id):
+    lista = []
+    for item in inventario:
+        if (item["id"] == id):
+            lista.append(item)
+    if (len(lista) == 0):
+        print("No hay ningún item con ese id asignado.\n")
+        return
+    else:
+        for item in lista:
+            showItem(item)

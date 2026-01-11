@@ -33,7 +33,7 @@ tipo | valor | cantidad
 
 ### v1.1
 - Manejo de errores.
-- Filtrado por categoria.
+- Filtrado por tipo.
 - Implementacion de IDs para elementos.
 - Busqueda de elementos por ID.
 - Manipulación basica de items (CRUD).

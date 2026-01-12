@@ -1,15 +1,55 @@
 import time
 import json
+import sqlite3
+    
+def getConnection():
+    connection = sqlite3.connect('./data/inventario.db')
+    return connection
 
-def getInventory():
-    try:
-        with open("./data/inventario.json", "r") as json_file:
-            content = json.load(json_file)
-        return content
-    except FileNotFoundError:
-        print("No se ha encontrado el archivo inventario.json.")
-        time.sleep(1)
-        return False
+def getTypes(connection):
+    cursor = connection.cursor()
+    lista = {}
+    cursor.execute('select * from tipos')
+    tipos = cursor.fetchall()
+    for tipo in tipos:
+        lista[tipo[0]] = tipo[1]
+    return lista
+
+def showAllItems(connection):
+    cursor = connection.cursor()
+
+    tipos = getTypes(connection)
+    cursor.execute('select * from items')
+    items = cursor.fetchall()
+    
+    for item in items:
+        print(f'ID: {item[0]}\nTipo: {tipos[item[1]]}\nValor: {item[2]}\nCantidad: {item[3]}\n')
+
+def showTypeItems(connection, type):
+    cursor = connection.cursor()
+    cursor.execute('select id from tipos where nombre = ?', (type,))
+    id = cursor.fetchone()
+    if not id:
+        print('No existe ningún item con ese tipo.\n')
+        return
+    cursor.execute('select * from items where tipoid = ?', (id[0],))
+    items = cursor.fetchall()
+    for item in items:
+        print(f'ID: {item[0]}\nTipo: {type}\nValor: {item[2]}\nCantidad: {item[3]}\n')
+
+def showIdItem(connection, id):
+    cursor = connection.cursor()
+    tipos = getTypes(connection)
+    cursor.execute('select * from items where id = ?', (id,))
+    item = cursor.fetchone()
+    if not item:
+        print('No existe ningún item con ese id.\n')
+        return
+    print(f'ID: {item[0]}\nTipo: {tipos[item[1]]}\nValor: {item[2]}\nCantidad: {item[3]}\n')
+    
+
+def closeConnection(connection):
+    connection.close()
     
 def saveInventory(inventario):
     try:
@@ -46,29 +86,6 @@ def showItem(item):
     cantidad = item["cantidad"]
 
     print(f"ID: {id}\nTipo: {tipo}\nValor: {valor}\nCantidad: {cantidad}\n")
-
-def searchType(inventario, type):
-    lista = []
-    for item in inventario:
-        if (item["tipo"] == type):
-            lista.append(item)
-    if (len(lista) == 0):
-        print("No hay ningún item con ese tipo asignado.\n")
-        return
-    else:
-        for item in lista:
-            showItem(item)
-def searchId(inventario, id):
-    lista = []
-    for item in inventario:
-        if (item["id"] == id):
-            lista.append(item)
-    if (len(lista) == 0):
-        print("No hay ningún item con ese ID asignado.\n")
-        return
-    else:
-        for item in lista:
-            showItem(item)
 
 def deleteItem(inventario, id):
     for item in inventario:

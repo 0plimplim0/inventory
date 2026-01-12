@@ -1,5 +1,6 @@
 import json
 import os
+import logging
 
 # Los argumentos tienen que ser la ruta al archivo desde donde se ejecuta la funcion, no solo el nombre :p
 def txtToJson(txtFileName, jsonFileName):
@@ -36,3 +37,7 @@ def inventoryRoutine():
     print("===========================")
     print("=   I N V E N T A R I O   =")
     print("===========================\n")
+
+def logError(error):
+    print("\nHa ocurrido un error.\n")
+    logging.error(error)

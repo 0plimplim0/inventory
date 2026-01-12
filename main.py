@@ -1,41 +1,37 @@
 from utils import tools
 import core
 import time
+import logging
 
 def showMenu():
     tools.inventoryRoutine()
 
-    inventario = core.getInventory()
-    if (inventario == False):
-        return
+    connection = core.getConnection()
     
     print("Selecciona una opción:\n\n1. Ver todo.\n2. Buscar por tipo.\n3. Buscar por ID.\n")
     seleccion = input("Seleccion: ")
     match seleccion:
         case "1":
-            for item in inventario:
-                core.showItem(item)
+            tools.inventoryRoutine()
+            core.showAllItems(connection)
         case "2":
-            tipo = input("Tipo: ").strip()
-            if not tipo:
-                print("Por favor introduce un tipo válido.")
-                time.sleep(1)
-                return
+            tipo = input("Tipo: ").lower()
             tools.inventoryRoutine()
-            core.searchType(inventario, tipo)
+            core.showTypeItems(connection, tipo)
         case "3":
-            id = input("ID: ").strip()
-            if not id:
-                print("Por favor introduce un ID válido.")
-                time.sleep(1)
-                return
-            tools.inventoryRoutine()
-            core.searchId(inventario, id)
+            # Agregar manejo de errores aqui
+            try:
+                id = int(input("ID: "))
+                tools.inventoryRoutine()
+                core.showIdItem(connection, id)
+            except Exception as e:
+                tools.logError(e)
         case _:
             print("Opción inválida.")
             time.sleep(1)
             return
     input("Presiona ENTER para volver.")
+    core.closeConnection(connection)
 
 def addMenu():
     tools.clearConsole()
@@ -94,6 +90,7 @@ def editMenu():
         return
     core.saveInventory(newInventario)
 
+logging.basicConfig(filename='./logs/error.log', level=logging.ERROR, format='%(asctime)s:%(levelname)s:%(message)s')
 running = True
 while running:
     tools.clearConsole()

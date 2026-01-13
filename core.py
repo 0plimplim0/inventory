@@ -1,6 +1,5 @@
 import time
 import sqlite3
-import logging
     
 def getConnection():
     connection = sqlite3.connect('./data/inventario.db')

@@ -1,4 +1,4 @@
-# INVENTARIO v1.1
+# INVENTARIO v1.2
 
 ## Estado del proyecto
 En desarrollo activo
@@ -41,7 +41,7 @@ tipo | valor | cantidad
 
 ### v1.2
 - Cambio de *json* a *sqlite*.
-- Mejora en el manejo de errores (Logs).
+- Implementacion de logs para manejo de errores.
 
 ### v1.3
 - Interfaz grafica con *Tkinter*.

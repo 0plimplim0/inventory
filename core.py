@@ -1,5 +1,4 @@
 import time
-import json
 import sqlite3
     
 def getConnection():
@@ -69,6 +68,8 @@ def saveItem(connection, id, tipoid, valor, cantidad):
     cursor = connection.cursor()
     cursor.execute('insert into items values(?, ?, ?, ?)', (id, tipoid, valor, cantidad))
     connection.commit()
+    print("El item se ha agregado correctamente.")
+    time.sleep(1)
 
 def checkType(connection, type):
     cursor = connection.cursor()
@@ -89,3 +90,16 @@ def checkType(connection, type):
                 return False
             case _:
                 print("Opción inválida.")
+
+def deleteItem(connection, id):
+    cursor = connection.cursor()
+    cursor.execute('select * from items where id = ?', (id,))
+    item = cursor.fetchone()
+    if not item:
+        print('\nNo existe ningún item con ese ID asignado.')
+        time.sleep(1)
+        return
+    cursor.execute('delete from items where id = ?', (id,))
+    connection.commit()
+    print("\nEl item se ha eliminado correctamente.")
+    time.sleep(1)

@@ -49,9 +49,10 @@ def addMenu():
     valor = input("Valor: ")
     try:
         cantidad = int(input("Cantidad: "))
+        core.saveItem(connection, id, tipo, valor, cantidad)
+        core.closeConnection(connection)
     except Exception as e:
         tools.logError(e)
-    core.saveItem(connection, id, tipo, valor, cantidad)  
 
 def deleteMenu():
     tools.clearConsole()
@@ -59,12 +60,13 @@ def deleteMenu():
     print("=======================================")
     print("=  E L I M I N A R   E L E M E N T O  =")
     print("=======================================\n")
-    id = input("ID: ")
-    inventario = core.getInventory()
-    newInventario = core.deleteItem(inventario, id)
-    if (newInventario == False):
-        return
-    core.saveInventory(newInventario)
+    connection = core.getConnection()
+    try:
+        id = int(input("ID: "))
+        core.deleteItem(connection, id)
+    except Exception as e:
+        logging.error(e)
+    core.closeConnection(connection)
 
 def editMenu():
     tools.clearConsole()

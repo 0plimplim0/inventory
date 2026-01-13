@@ -1,5 +1,6 @@
 import time
 import sqlite3
+import logging
     
 def getConnection():
     connection = sqlite3.connect('./data/inventario.db')
@@ -99,7 +100,27 @@ def deleteItem(connection, id):
         print('\nNo existe ningún item con ese ID asignado.')
         time.sleep(1)
         return
-    cursor.execute('delete from items where id = ?', (id,))
+    print(f'\nItem encontrado:\n\nID: {id}\nTipo: {item[1]}\nValor: {item[2]}\nCantidad: {item[3]}\n')
+    confirm = input('Confirma la eliminacion del item? (Y/n): ').lower()
+    if (confirm == "y"):
+        cursor.execute('delete from items where id = ?', (id,))
+        connection.commit()
+        print('\nEl item se ha eliminado correctamente.')
+        time.sleep(1)
+    else:
+        return
+
+def updateItem(connection, id):
+    cursor = connection.cursor()
+    cursor.execute('select * from items where id = ?', (id,))
+    item = cursor.fetchone()
+    if not item:
+        print('\nNo existe ningún item con ese ID asignado.')
+        time.sleep(1)
+        return
+    print(f'\nItem encontrado:\n\nID: {id}\nTipo: {item[1]}\nValor: {item[2]}\nCantidad: {item[3]}\n')
+    newCantidad = int(input('Nueva cantidad: '))
+    cursor.execute('update items set cantidad = ? where id = ?', (newCantidad, id))
     connection.commit()
-    print("\nEl item se ha eliminado correctamente.")
+    print('\nEl item se ha actualizado correctamente.')
     time.sleep(1)

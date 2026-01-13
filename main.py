@@ -74,12 +74,13 @@ def editMenu():
     print("===================================")
     print("=  E D I T A R   E L E M E N T O  =")
     print("===================================\n")
-    id = input("ID: ")
-    inventario = core.getInventory()
-    newInventario = core.updateItem(inventario, id)
-    if (newInventario == False):
-        return
-    core.saveInventory(newInventario)
+    connection = core.getConnection()
+    try:
+        id = int(input("ID: "))
+        core.updateItem(connection, id)
+    except Exception as e:
+        logging.error(e)
+    core.closeConnection(connection)
 
 logging.basicConfig(filename='./logs/error.log', level=logging.ERROR, format='%(asctime)s:%(levelname)s:%(message)s')
 running = True

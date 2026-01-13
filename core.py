@@ -6,7 +6,7 @@ def getConnection():
     connection = sqlite3.connect('./data/inventario.db')
     return connection
 
-def getTypes(connection):
+def getTypeIds(connection):
     cursor = connection.cursor()
     lista = {}
     cursor.execute('select * from tipos')
@@ -18,7 +18,7 @@ def getTypes(connection):
 def showAllItems(connection):
     cursor = connection.cursor()
 
-    tipos = getTypes(connection)
+    tipos = getTypeIds(connection)
     cursor.execute('select * from items')
     items = cursor.fetchall()
     
@@ -39,7 +39,7 @@ def showTypeItems(connection, type):
 
 def showIdItem(connection, id):
     cursor = connection.cursor()
-    tipos = getTypes(connection)
+    tipos = getTypeIds(connection)
     cursor.execute('select * from items where id = ?', (id,))
     item = cursor.fetchone()
     if not item:
@@ -49,64 +49,43 @@ def showIdItem(connection, id):
     
 
 def closeConnection(connection):
-    connection.close()
-    
-def saveInventory(inventario):
-    try:
-        with open("./data/inventario.json", "w") as json_file:
-            json.dump(inventario, json_file, indent=4)
-            print("Inventario actualizado correctamente.")
-            time.sleep(1)
-    except:
-        print("Ha ocurrido un error al guardar.")
-        time.sleep(1)
-        return
+    connection.close()    
+  
+def generateId(connection, table):
+    cursor = connection.cursor()
+    if (table == 'items'):
+        cursor.execute('select id from items')
+    elif (table == 'tipos'):
+        cursor.execute('select id from tipos')
+    items = cursor.fetchall()
+    if not items:
+        return 1
+    length = len(items) - 1
+    item = items[length]
+    id = item[0] + 1
+    return id
 
-# Mas adelante cambiar a formateo con f-strings
-# Aviso: El tope de items es de 999.   
-def generateId(inventario):
-    index = len(inventario) - 1
-    lastItem = inventario[index]
-    num = int(lastItem["id"]) + 1
-    length = len(str(num))
-    match length:
-        case 1:
-            id = "00" + str(num)
-            return id
-        case 2:
-            id = "0" + str(num)
-            return id
-        case 3:
-            return str(num)
+def saveItem(connection, id, tipoid, valor, cantidad):
+    cursor = connection.cursor()
+    cursor.execute('insert into items values(?, ?, ?, ?)', (id, tipoid, valor, cantidad))
+    connection.commit()
 
-def showItem(item):
-    id = item["id"]
-    tipo = item["tipo"]
-    valor = item["valor"]
-    cantidad = item["cantidad"]
-
-    print(f"ID: {id}\nTipo: {tipo}\nValor: {valor}\nCantidad: {cantidad}\n")
-
-def deleteItem(inventario, id):
-    for item in inventario:
-        if (item["id"] == id):
-            inventario.remove(item)
-            return inventario
-    print("No existe ningún item con ese ID asignado.")
-    time.sleep(1)
-    return False
-
-def updateItem(inventario, id):
-    for item in inventario:
-        if (item["id"] == id):
-            try:
-                newCantidad = int(input("Nueva cantidad: "))
-                item["cantidad"] = newCantidad
-                return inventario
-            except ValueError:
-                print("Cantidad inválida.")
-                time.sleep(1)
+def checkType(connection, type):
+    cursor = connection.cursor()
+    cursor.execute('select * from tipos')
+    tipos = cursor.fetchall()
+    for tipo in tipos:
+        if (type == tipo[1]):
+            return tipo[0]
+    while True:
+        select = input('Ese tipo aun no está registrado. Deseas registrarlo? (Y/n): ').upper()
+        match select:
+            case "Y":
+                id = generateId(connection, 'tipos')
+                cursor.execute('insert into tipos values(?, ?)', (id, type))
+                connection.commit()
+                return id
+            case "N":
                 return False
-    print("No existe ningún item con ese ID asignado.")
-    time.sleep(1)
-    return False
+            case _:
+                print("Opción inválida.")

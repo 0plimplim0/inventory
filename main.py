@@ -15,11 +15,10 @@ def showMenu():
             tools.inventoryRoutine()
             core.showAllItems(connection)
         case "2":
-            tipo = input("Tipo: ").lower()
+            tipo = input("Tipo: ")
             tools.inventoryRoutine()
             core.showTypeItems(connection, tipo)
         case "3":
-            # Agregar manejo de errores aqui
             try:
                 id = int(input("ID: "))
                 tools.inventoryRoutine()
@@ -40,29 +39,19 @@ def addMenu():
     print("=  A G R E G A R   E L E M E N T O  =")
     print("=====================================\n")
 
-    inventario = core.getInventory()
-    if (inventario == False):
-        return
-    id = core.generateId(inventario)
+    connection = core.getConnection()
+    id = core.generateId(connection, "items")
 
     print("Ingrese los datos:\n")
-    tipo = input("Tipo: ")
+    tipo = core.checkType(connection, input("Tipo: "))
+    if not tipo:
+        return
     valor = input("Valor: ")
     try:
         cantidad = int(input("Cantidad: "))
-    except ValueError:
-        print("Por favor introduce una cantidad válida.")
-        time.sleep(1)
-        return
-    element = {
-        "id": id,
-        "tipo": tipo,
-        "valor": valor,
-        "cantidad": cantidad
-    }
-    
-    inventario.append(element)
-    core.saveInventory(inventario)    
+    except Exception as e:
+        tools.logError(e)
+    core.saveItem(connection, id, tipo, valor, cantidad)  
 
 def deleteMenu():
     tools.clearConsole()

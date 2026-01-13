@@ -13,7 +13,8 @@ Mas que un proyecto es una herramienta que desarrolle y desarrollo para uso prop
     ```
     git clone https://github.com/0plimplim0/inventory
     ```
-3. Ejecutar
+3. Crear la carpeta **logs/**
+4. Ejecutar
     ````
     python ./main.py
     ```

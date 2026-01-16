@@ -1,7 +1,8 @@
 # INVENTARIO v1.2
 
 ## Estado del proyecto
-En desarrollo activo
+Desarrollo pausado.
+Version estable.
 
 ## Qué es?
 Es basicamente un programa de inventario en consola.
